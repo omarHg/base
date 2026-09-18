@@ -12,6 +12,7 @@ public protocol ApiClient: Actor {
                                method: HTTPMethod,
                                body: Data?,
                                headers: [String: String]?) async throws -> T
+    func execute<Response: Decodable>(request: ApiRequest) async throws -> Response
 }
 
 public actor APIClientImplementation: ApiClient {
@@ -23,6 +24,28 @@ public actor APIClientImplementation: ApiClient {
         self.jsonDecoder = jsonDecoder
     }
     
+    
+    public func execute<Response>(request: ApiRequest) async throws -> Response where Response : Decodable {
+        var request = request.build()
+        // Execute the network request using async/await
+        let (data, response) = try await session.data(for: request)
+        
+        // Validate the HTTP response code
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw APIError.invalidData
+        }
+        
+        guard (200...299).contains(httpResponse.statusCode) else {
+            throw APIError.requestFailed(statusCode: httpResponse.statusCode)
+        }
+        
+        // Decode and return the expected type
+        do {
+            return try jsonDecoder.decode(Response.self, from: data)
+        } catch {
+            throw APIError.invalidData
+        }
+    }
     /// Sends an asynchronous network request and returns a decoded object
     public func request<T: Decodable>(
         endpoint: String,
