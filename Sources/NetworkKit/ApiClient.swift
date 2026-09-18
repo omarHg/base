@@ -26,25 +26,32 @@ public actor APIClientImplementation: ApiClient {
     
     
     public func execute<Response>(request: ApiRequest) async throws -> Response where Response : Decodable {
-        var request = request.build()
+        Console.logApi(request: request)
+        let urlRequest = request.build()
         // Execute the network request using async/await
-        let (data, response) = try await session.data(for: request)
-        
+        let (data, response) = try await session.data(for: urlRequest)
+        var catchURLResponse: HTTPURLResponse?
+        var catchData: Data?
         // Validate the HTTP response code
         guard let httpResponse = response as? HTTPURLResponse else {
             throw APIError.invalidData
         }
-        
+        catchURLResponse = httpResponse
+        catchData = data
         guard (200...299).contains(httpResponse.statusCode) else {
             throw APIError.requestFailed(statusCode: httpResponse.statusCode)
         }
         
         // Decode and return the expected type
         do {
-            let dataString = String(data: data, encoding: .utf8)
-            Console.logApi(dataString ?? "")
+            Console.logApi(response: httpResponse, request: request, data: data)
             return try jsonDecoder.decode(Response.self, from: data)
         } catch {
+            Console.logApi(
+                error: error,
+                request: request,
+                response: catchURLResponse,
+                data: catchData)
             throw APIError.invalidData
         }
     }
