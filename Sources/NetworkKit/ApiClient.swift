@@ -41,6 +41,8 @@ public actor APIClientImplementation: ApiClient {
         
         // Decode and return the expected type
         do {
+            let dataString = String(data: data, encoding: .utf8)
+            Console.logApi(dataString ?? "")
             return try jsonDecoder.decode(Response.self, from: data)
         } catch {
             throw APIError.invalidData

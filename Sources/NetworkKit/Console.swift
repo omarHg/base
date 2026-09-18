@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UtilsKit
 
 public enum LogType: String, CaseIterable, Sendable {
     case info
@@ -71,5 +72,68 @@ private final class ConsoleConfiguration: @unchecked Sendable {
         lock.lock()
         defer { lock.unlock() }
         allowedTypes = Set(types)
+    }
+}
+
+extension Console {
+    static func logApi(request: ApiRequest) {
+        let method = request.method.rawValue
+        let url = request.url.absoluteString
+        let body = request.body?.string
+        var message = "\nRequest: \(method) | \(url)"
+        if let body = body {
+            message += "\nBody: \(body)"
+        }
+        logApi(message)
+    }
+    
+    static func logApiRetry(request: ApiRequest, number: Int) {
+        let method = request.method.rawValue
+        let url = request.url.absoluteString
+        let body = request.body?.string
+        var message = "\nRetry \(number) Request: \(method) | \(url)"
+        if let body = body {
+            message += "\nBody: \(body)"
+        }
+        logApi(message)
+    }
+    
+    static func logApi(response: HTTPURLResponse, request: ApiRequest, data: Data) {
+        let url = request.url.absoluteString
+        let method = request.method.rawValue
+        let statusCode = response.localizedStatusCode
+        let data = data.string
+        let message = """
+        \nResponse: \(method) | \(statusCode) | \(url)
+        Data: \(data)
+        """
+        logApi(message)
+    }
+    
+    static func logApi(error: Error, request: ApiRequest, response: HTTPURLResponse?, data: Data?) {
+        let url = request.url.absoluteString
+        let method = request.method.rawValue
+        let statusCode = response?.localizedStatusCode
+        let data = data?.string ?? ""
+        var message = "\nResponse: \(method)"
+        if let statusCode = statusCode {
+            message += " | \(statusCode)"
+        }
+        message += " | \(url)"
+        message += "\nError: \(String(describing: error))"
+        message += "\nData: \(data)"
+        logApi(message)
+    }
+}
+
+extension HTTPURLResponse {
+    var localizedStatusCode: String {
+        let localizedCode = statusCode == 200 ? "Ok" : HTTPURLResponse.localizedString(forStatusCode: statusCode)
+        return String(statusCode) + " " + localizedCode
+    }
+    
+    var requestId: String? {
+        allHeaderFields[ApiHeaderKey.requestId.rawValue] as? String ??
+        allHeaderFields[ApiHeaderKey.requestId.rawValue.lowercased()] as? String
     }
 }
