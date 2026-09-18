@@ -103,18 +103,6 @@ extension BaseViewController {
         )
     }
     
-    // MARK: - View Debugging
-    
-    /// Debugea la jerarquía de vistas (solo en DEBUG)
-    func debugViewHierarchy(_ view: UIView = UIApplication.shared.windows.first?.rootViewController?.view ?? UIView(), indent: String = "") {
-        #if DEBUG
-        print("\(indent)\(type(of: view))")
-        for subview in view.subviews {
-            debugViewHierarchy(subview, indent: indent + "  ")
-        }
-        #endif
-    }
-    
     // MARK: - Memory Management
     
     /// Libera recursos cuando el view controller se deinicializa
