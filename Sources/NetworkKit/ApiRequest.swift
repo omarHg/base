@@ -52,6 +52,7 @@ public struct ApiRequest: Hashable {
         }
         request.httpBody = body
         request.httpMethod = method.rawValue
+        Console.logApi(headers.debugDescription)
         return request
     }
 }
