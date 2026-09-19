@@ -143,7 +143,6 @@ extension ApiRequest {
     
     static var baseHeaders: [ApiHeaderKey: String] {
         [
-            .contentType: ApiHeaderValue.textPlain,
             .accept: ApiHeaderValue.jsonText,
             .acceptEncoding: ApiHeaderValue.gzipDeflateBr,
             .connection: ApiHeaderValue.keepAlive,
