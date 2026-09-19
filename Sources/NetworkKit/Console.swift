@@ -26,7 +26,10 @@ public class Console {
         guard configuration.isAllowed(type) else {
             return
         }
-        let bundle = Bundle.main
+        let appName = Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String
+            ?? Bundle.main.object(forInfoDictionaryKey: "kCFBundleNameKey" as String) as? String
+            ?? "App"
+        let bundle = appName
         let module = fileId.components(separatedBy: "/")[.zero]
         print("\(bundle) [\(module)] [\(type.rawValue.capitalized)]: \(message)")
     }
