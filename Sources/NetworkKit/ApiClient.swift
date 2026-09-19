@@ -19,7 +19,7 @@ public enum AuthEvents {
     // Un Subject que emite el nuevo token cada vez que se hace inicio de sesión
     // Wrapped in an @unchecked Sendable container to acknowledge Combine's non-Sendable type
     private static let _token = _SendablePassthroughSubject<String>()
-    static var tokenPublisher: PassthroughSubject<String, Never> { _token.subject }
+    public static var tokenPublisher: PassthroughSubject<String, Never> { _token.subject }
 }
 
 public protocol ApiClient: Actor {
