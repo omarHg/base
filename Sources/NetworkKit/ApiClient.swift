@@ -70,6 +70,7 @@ public actor APIClientImplementation: ApiClient {
         let urlRequest = request
             .token(token)
             .build()
+        Console.logApi(request: urlRequest)
         // Execute the network request using async/await
         let (data, response) = try await session.data(for: urlRequest)
         var catchURLResponse: HTTPURLResponse?

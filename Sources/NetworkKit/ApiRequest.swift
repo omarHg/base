@@ -82,12 +82,6 @@ public extension ApiRequest {
         return copy
     }
     
-    func mfaCode(_ code: String) -> ApiRequest {
-        var copy = self
-        copy.headers[.mfaCode] = code
-        return copy
-    }
-    
     func latitude(_ latitude: String) -> ApiRequest {
         var copy = self
         copy.headers[.latitude] = latitude
@@ -97,18 +91,6 @@ public extension ApiRequest {
     func longitude(_ longitude: String) -> ApiRequest {
         var copy = self
         copy.headers[.longitude] = longitude
-        return copy
-    }
-    
-    func profileSessionId(_ id: String) -> ApiRequest {
-        var copy = self
-        copy.headers[.profileSessionId] = id
-        return copy
-    }
-    
-    func appName(_ appName: String) -> ApiRequest {
-        var copy = self
-        copy.headers[.appName] = appName
         return copy
     }
     
