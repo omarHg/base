@@ -8,17 +8,17 @@
 @MainActor
 public protocol Presenter { }
 
-public extension Presenter {
+extension Presenter {
     @discardableResult
     public func safeTask(
-        _ operation: @escaping @MainActor() async throws -> Void,
-        catch errorHandler: @escaping @MainActor (Error) -> Void
+        _ operation: @escaping @MainActor () async throws -> Void,
+        catch errorHandler: (@MainActor (Error) -> Void)? = nil
     ) -> Task<Void, Never> {
         Task { @MainActor in
             do {
                 try await operation()
             } catch {
-                errorHandler(error)
+                errorHandler?(error)
             }
         }
     }
