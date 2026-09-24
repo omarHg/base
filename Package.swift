@@ -13,6 +13,7 @@ let package = Package(
             targets: [
                 "NetworkKit",
                 "CoordinatorKit",
+                "PresenterKit",
                 "StorageKit",
                 "UtilsKit"
             ]
@@ -26,6 +27,9 @@ let package = Package(
             dependencies: [
                 "UtilsKit",
             ]),
+        .target(
+            name: "PresenterKit"
+        ),
         .target(
             name: "CoordinatorKit"
         ),

@@ -134,9 +134,4 @@ extension HTTPURLResponse {
         let localizedCode = statusCode == 200 ? "Ok" : HTTPURLResponse.localizedString(forStatusCode: statusCode)
         return String(statusCode) + " " + localizedCode
     }
-    
-    var requestId: String? {
-        allHeaderFields[ApiHeaderKey.requestId.rawValue] as? String ??
-        allHeaderFields[ApiHeaderKey.requestId.rawValue.lowercased()] as? String
-    }
 }
